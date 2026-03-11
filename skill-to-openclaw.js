@@ -58,17 +58,61 @@ function parseFrontmatter(content) {
   
   const frontmatter = match[1];
   const nameMatch = frontmatter.match(/^name:\s*"?([^"\n]+)"?/m);
-  const descMatch = frontmatter.match(/^description:\s*"?([^"\n]+)"?/m);
+  
+  // Extract description - use simpler approach to handle multiline YAML
+  let description = '';
+  
+  // Check for multiline with | or >
+  const pipePos = frontmatter.indexOf('description: |');
+  const gtPos = frontmatter.indexOf('description: >');
+  const startPos = pipePos !== -1 ? pipePos : gtPos;
+  
+  if (startPos !== -1) {
+    const afterDesc = frontmatter.slice(startPos + 'description: |'.length);
+    // Find next key (starts with word characters/hyphens followed by colon)
+    const nextKeyMatch = afterDesc.match(/\n[\w-]+: /);
+    if (nextKeyMatch) {
+      description = afterDesc.slice(0, nextKeyMatch.index);
+    } else {
+      description = afterDesc;
+    }
+    // Remove leading indentation (2 spaces typical in YAML)
+    description = description.replace(/^\s{2}/gm, '').trim();
+  } else {
+    // Try simple quoted string
+    const quotedMatch = frontmatter.match(/^description:\s*"([^"\n]+)"/m);
+    if (quotedMatch) {
+      description = quotedMatch[1];
+    } else {
+      // Try simple value
+      const simpleMatch = frontmatter.match(/^description:\s*([^"\n]+)/m);
+      if (simpleMatch) {
+        description = simpleMatch[1].trim();
+      }
+    }
+  }
   
   // Extract triggers from description (everything after "Triggers on")
   let triggers = [];
-  if (descMatch) {
-    const desc = descMatch[1];
-    const triggersMatch = desc.match(/Triggers? on[:\s]+(.+?)(?:\.|$)/i);
+  if (description) {
+    const triggersMatch = description.match(/Triggers? on[:\s]+(.+?)(?:\.|$)/i);
     if (triggersMatch) {
       triggers = triggersMatch[1].split(/[,;]/).map(t => t.trim().toLowerCase()).filter(Boolean);
     }
   }
+  
+  // Extract allowed-tools (convert to triggers)
+  const toolsMatch = frontmatter.match(/allowed-tools:\s*([\s\S]*?)(?=^[\w-]+: |^---)/m);
+  if (toolsMatch) {
+    const toolMatches = toolsMatch[1].match(/- ([^\n]+)/g);
+    if (toolMatches) {
+      const toolTriggers = toolMatches.map(t => t.replace(/^- /, '').trim().toLowerCase());
+      triggers = [...triggers, ...toolTriggers];
+    }
+  }
+  
+  // Clean description - remove triggers part
+  const cleanDescription = description.replace(/Triggers? on[:\s]+.+?(\.|$)/gi, '').trim();
   
   // Extract any metadata block
   let metadata = {};
@@ -83,7 +127,7 @@ function parseFrontmatter(content) {
   
   return {
     name: nameMatch ? nameMatch[1].trim() : null,
-    description: descMatch ? descMatch[1].replace(/Triggers? on[:\s]+.+?(\.|$)/i, '').trim() : '',
+    description: cleanDescription,
     triggers,
     metadata
   };
