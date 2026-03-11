@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Install skill-to-openclaw
-# Usage: curl -sL https://raw.githubusercontent.com/your-repo/skill-to-openclaw/main/install.sh | bash
+# Usage: curl -sL https://raw.githubusercontent.com/LoberQuip/skill-to-openclaw/main/install.sh | bash
 
 set -euo pipefail
 
-REPO_URL="${REPO_URL:-https://github.com/your-repo/skill-to-openclaw.git}"
+REPO_URL="${REPO_URL:-https://github.com/LoberQuip/skill-to-openclaw.git}"
 INSTALL_DIR="${HOME}/.skill-to-openclaw"
 BIN_DIR="${HOME}/.local/bin"
 SCRIPT_NAME="skill-to-openclaw"
