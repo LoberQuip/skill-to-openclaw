@@ -1,22 +1,38 @@
-# Skill → OpenClaw Skill Converter
+# Skill → OpenClaw Converter
 
-Convert Claude Code skills to OpenClaw skill format with a single command.
+<p align="center">
+  <a href="https://www.npmjs.com/package/skill-to-openclaw"><img src="https://img.shields.io/npm/v/skill-to-openclaw" alt="npm"></a>
+  <a href="https://github.com/quipxi/skill-to-openclaw/blob/main/LICENSE"><img src="https://img.shields.io/github/license/quipxi/skill-to-openclaw" alt="License"></a>
+</p>
+
+Convert Claude Code skills to OpenClaw skill format with a single command. Bridge the gap between the Claude Code ecosystem and OpenClaw.
+
+## Why This Tool?
+
+Claude Code has hundreds of community skills. Most work great in OpenClaw but need a format conversion. This tool automates that process.
+
+**Use when:**
+- You found a cool Claude Code skill and want to use it in OpenClaw
+- You're migrating from Claude Code to OpenClaw
+- You want to share your OpenClaw skills with Claude Code users
 
 ## Install
 
 ```bash
-# Quick install (via curl)
-curl -sL https://raw.githubusercontent.com/your-repo/skill-to-openclaw/main/install.sh | bash
+# Quick install
+curl -sL https://raw.githubusercontent.com/quipxi/skill-to-openclaw/main/install.sh | bash
 
-# Or manual
-git clone https://github.com/your-repo/skill-to-openclaw.git ~/skill-to-openclaw
+# Or manually
+git clone https://github.com/quipxi/skill-to-openclaw.git ~/skill-to-openclaw
 ln -sf ~/skill-to-openclaw/skill-to-openclaw.js ~/.local/bin/skill-to-openclaw
 ```
+
+Requires: Node.js 18+, Git
 
 ## Usage
 
 ```bash
-# From GitHub repo
+# From GitHub
 skill-to-openclaw owner/repo
 skill-to-openclaw https://github.com/owner/repo
 
@@ -33,6 +49,31 @@ skill-to-openclaw owner/repo --force
 skill-to-openclaw owner/repo --dry-run
 ```
 
+## Demo
+
+```bash
+$ skill-to-openclaw ParthJadhav/app-store-screenshots
+
+🔄 Converting: ParthJadhav/app-store-screenshots
+📦 Cloning ParthJadhav/app-store-screenshots...
+📄 Found: skills/app-store-screenshots/SKILL.md
+✨ Skill: app-store-screenshots
+📝 Description: Use when building App Store screenshot pages...
+🏷️  Triggers: app store, screenshots, marketing assets
+✅ Saved to: ~/.openclaw/skills/app-store-screensshots
+🎉 Skill "app-store-screenshots" ready!
+
+Restart OpenClaw or run: openclaw skills sync
+```
+
+## What It Does
+
+1. **Input** — Accepts GitHub repo, URL, or local path
+2. **Parse** — Finds SKILL.md, extracts name, description, triggers
+3. **Copy** — Copies supporting files (mockups, scripts, assets)
+4. **Convert** — Rewrites SKILL.md in OpenClaw format
+5. **Save** — Writes to `~/.openclaw/skills/[name]/`
+
 ## Options
 
 | Flag | Description |
@@ -42,36 +83,10 @@ skill-to-openclaw owner/repo --dry-run
 | `-d, --dry-run` | Preview without writing |
 | `-h, --help` | Show help |
 
-## What It Does
+## Related
 
-1. Accepts GitHub repo, URL, or local path
-2. Finds SKILL.md in the skill folder
-3. Parses frontmatter (name, description, triggers)
-4. Copies supporting files
-5. Converts to OpenClaw format
-6. Saves to `~/.openclaw/skills/[name]/`
-
-## Example
-
-```bash
-# Convert the app-store-screenshots skill
-$ skill-to-openclaw ParthJadhav/app-store-screenshots
-
-🔄 Converting: ParthJadhav/app-store-screenshots
-📦 Cloning ParthJadhav/app-store-screenshots...
-📄 Found: skills/app-store-screenshots/SKILL.md
-✨ Skill: app-store-screenshots
-📝 Description: Use when building App Store screenshot pages...
-🏷️  Triggers: app store, screenshots, marketing assets
-✅ Saved to: ~/.openclaw/skills/app-store-screenshots
-🎉 Skill "app-store-screenshots" ready!
-```
-
-## Requirements
-
-- Node.js 18+
-- Git
-- Internet (for GitHub repos)
+- [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) — 170+ skills that work on both platforms natively
+- [skill-porter](https://github.com/jduncan-rva/skill-porter) — Convert between Claude Code and Gemini CLI
 
 ## License
 
