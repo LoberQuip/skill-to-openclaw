@@ -14,7 +14,7 @@ Claude Code has hundreds of community skills. Most work great in OpenClaw but ne
 ## Install
 
 ```bash
-curl -sL https://raw.githubusercontent.com/quipxi/skill-to-openclaw/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/QUIPXI/skill-to-openclaw/main/install.sh | bash
 ```
 
 Requires: Node.js 18+, Git
